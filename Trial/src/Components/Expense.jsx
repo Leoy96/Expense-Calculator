@@ -10,14 +10,17 @@ const Expense = () => {
     const [unitPrice, setUnitPrice] = useState('')
 
     useEffect(()=>{
-        const saved = localStorage.getItem('items')
-        if(saved){
-            setItems(JSON.parse(saved))
+        try {
+            const saved = localStorage.getItem('items')
+            if(saved){
+                setItems(JSON.parse(saved))
+            }
+        } catch {
+            setItems([])
         }
-    },[]
-    )
+    },[])
 
-    const [editId, setEditId] = useState('')
+    const [editId, setEditId] = useState(null)
 
     const handleChange=(e)=>{
         setTrackItems(e.target.value)
@@ -37,7 +40,7 @@ const Expense = () => {
             alert('input field cannot be empty')
             return;
         }
-        if(editId){
+        if(editId !== null){
             const updateValue = items.map(i=>i.id === editId ? {...i, name:trackItems, quantity: Number(quantity), unitPrice: Number(unitPrice)} : i)
             setItems(updateValue)
             setQuantity('')
@@ -68,8 +71,8 @@ const Expense = () => {
     }
 
     const handleDelete=(d)=>{
-        const removeItem = items.filter(i=>i.id !== d)
-        setItems(removeItem)
+    const removeItem = items.filter(i=>i.id !== d)
+    setItems(removeItem)
     }
 
     useEffect(()=>{
